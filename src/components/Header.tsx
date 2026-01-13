@@ -17,8 +17,8 @@ const navLinks = [
 		icon: <Home size={20} />,
 	},
 	{
-		text: "Menu 1",
-		to: "/menu1",
+		text: "Fake Api",
+		to: "/fake-api",
 		icon: <SquareFunction size={20} />,
 	},
 	{

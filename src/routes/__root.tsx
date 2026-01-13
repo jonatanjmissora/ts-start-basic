@@ -52,7 +52,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<head>
 				<HeadContent />
 			</head>
-			<body className="flex flex-col min-h-screen w-full overflow-x-hidden">
+			<body className="flex flex-col min-h-screen w-full overflow-x-hidden bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
 				<Header />
 				{children}
 				<TanStackDevtools
