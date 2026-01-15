@@ -1,10 +1,10 @@
-import { getNotes } from "@/server/notes"
+import { getMongoNotes } from "@/server/notes"
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query"
 import { Note, SearchNotesParams } from "../types/notes"
 
 export const notesQueryOptions = queryOptions({
 	queryKey: ["notes"],
-	queryFn: () => getNotes(),
+	queryFn: () => getMongoNotes(),
 })
 
 export const useSuspenseFilteredNotes = ({

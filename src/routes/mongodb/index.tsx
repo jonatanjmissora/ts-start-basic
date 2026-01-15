@@ -4,10 +4,9 @@ import {
 	useSuspenseFilteredNotes,
 } from "@/lib/queries/notes"
 import { Note, searchNotesSchema } from "@/lib/types/notes"
-import { createFileRoute } from "@tanstack/react-router"
-import { Edit, Star, StarOff, Trash2 } from "lucide-react"
+import { createFileRoute, Link } from "@tanstack/react-router"
+import { Edit, Plus, Star, StarOff, Trash2 } from "lucide-react"
 import { Suspense } from "react"
-import CreateNote from "./-components/create-note"
 import Filters from "./-components/filters"
 
 export const Route = createFileRoute("/mongodb/")({
@@ -19,12 +18,22 @@ export const Route = createFileRoute("/mongodb/")({
 })
 
 function RouteComponent() {
+	const { filter, sort } = Route.useSearch()
 	return (
 		<article className="flex-1 w-full p-10 ">
 			<div className="flex items-enter justify-between">
 				<span className="text-2xl font-bold mb-4">NOTES PAGE</span>
 				<Filters />
-				<CreateNote />
+				<Link
+					to="/mongodb/create"
+					search={{
+						filter,
+						sort,
+					}}
+					className="bg-blue-500/30 rounded px-3 py-1 min-w-20 flex items-center justify-center gap-3"
+				>
+					nueva nota <Plus size={20} />
+				</Link>
 			</div>
 
 			<Suspense fallback={<NoteSkeletons />}>
