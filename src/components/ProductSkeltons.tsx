@@ -1,7 +1,6 @@
-export function ProductsSkeleton({ from }: { from: string }) {
+export function ProductsSkeleton() {
 	return (
 		<div className="w-full flex flex-col">
-			<p className="text-lg font-semibold my-4">carganddo desde {from}</p>
 			<div className="flex flex-wrap gap-4 my-10">
 				{Array.from({ length: 8 }).map((_, i) => (
 					<div

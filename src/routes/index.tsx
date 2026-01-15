@@ -6,7 +6,7 @@ function App() {
 	return (
 		<div className="flex-1 w-full">
 			<section className="relative py-20 px-6 text-center overflow-hidden">
-				HOLA MUNDO
+				HOME PAGE
 			</section>
 		</div>
 	)
