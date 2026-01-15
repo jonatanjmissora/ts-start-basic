@@ -1,20 +1,27 @@
 import { getNotes } from "@/server/notes"
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query"
+import { Note, SearchNotesParams } from "../types/notes"
 
 export const notesQueryOptions = queryOptions({
 	queryKey: ["notes"],
 	queryFn: () => getNotes(),
 })
 
-export const useSuspenseFilteredNotes = (q?: string) => {
+export const useSuspenseFilteredNotes = ({
+	filter,
+	sort,
+}: SearchNotesParams) => {
 	return useSuspenseQuery({
 		...notesQueryOptions,
 		select: notes => {
-			if (!q) return notes
+			let sortedNotes: Note[] = []
+			if (sort === "asc")
+				sortedNotes = notes.sort((a, b) => a.title.localeCompare(b.title))
+			if (sort === "desc")
+				sortedNotes = notes.sort((a, b) => b.title.localeCompare(a.title))
 
-			const normalized = q.toLowerCase()
-
-			return notes.filter(p => p.title.toLowerCase().includes(normalized))
+			if (filter === "favorites") return sortedNotes.filter(note => note.pinned)
+			return sortedNotes
 		},
 	})
 }

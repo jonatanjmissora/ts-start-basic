@@ -78,3 +78,10 @@ export function documentToNote(doc: NoteResponse): Note {
 		pinned: doc.pinned,
 	}
 }
+
+export const searchNotesSchema = z.object({
+	filter: z.enum(["all", "favorites"]).default("all").catch("all"),
+	sort: z.enum(["asc", "desc"]).default("asc").catch("asc"),
+})
+
+export type SearchNotesParams = z.infer<typeof searchNotesSchema>

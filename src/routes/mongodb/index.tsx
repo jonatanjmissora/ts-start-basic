@@ -1,13 +1,17 @@
-import { ProductsSkeleton } from "@/components/ProductSkeltons"
+import { NoteSkeletons } from "@/components/NoteSkeltons"
 import {
 	notesQueryOptions,
 	useSuspenseFilteredNotes,
 } from "@/lib/queries/notes"
-import { Note } from "@/lib/types/notes"
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { Note, searchNotesSchema } from "@/lib/types/notes"
+import { createFileRoute } from "@tanstack/react-router"
+import { Edit, Star, StarOff, Trash2 } from "lucide-react"
 import { Suspense } from "react"
+import CreateNote from "./-components/create-note"
+import Filters from "./-components/filters"
 
 export const Route = createFileRoute("/mongodb/")({
+	validateSearch: searchNotesSchema,
 	component: RouteComponent,
 	loader: async ({ context }) => {
 		context.queryClient.ensureQueryData(notesQueryOptions)
@@ -19,10 +23,11 @@ function RouteComponent() {
 		<article className="flex-1 w-full p-10 ">
 			<div className="flex items-enter justify-between">
 				<span className="text-2xl font-bold mb-4">NOTES PAGE</span>
-				{/* <SearchInput /> */}
+				<Filters />
+				<CreateNote />
 			</div>
 
-			<Suspense fallback={<ProductsSkeleton />}>
+			<Suspense fallback={<NoteSkeletons />}>
 				<NotesList />
 			</Suspense>
 		</article>
@@ -30,19 +35,15 @@ function RouteComponent() {
 }
 
 export default function NotesList() {
-	// const { q } = Route.useSearch()
-	const notes = useSuspenseFilteredNotes().data
+	const { filter, sort } = Route.useSearch()
+	const notes = useSuspenseFilteredNotes({ filter, sort }).data
 
 	return (
 		<div className="flex flex-wrap gap-4 my-10">
 			{notes.map((note: Note) => (
-				<Link
-					key={note.id}
-					to="/fake-api/$productId"
-					params={{ productId: note.id }}
-				>
+				<div key={note.id}>
 					<NoteElement note={note} />
-				</Link>
+				</div>
 			))}
 		</div>
 	)
@@ -50,11 +51,18 @@ export default function NotesList() {
 
 const NoteElement = ({ note }: { note: Note }) => {
 	return (
-		<div className="flex flex-col justify-between gap-2 rounded-lg bg-blue-800 w-80 h-40 p-2 shadow-lg">
-			<h2>{note.title}</h2>
-			<p>{note.content}</p>
-			<p>{note.author}</p>
-			<p>{note.pinned ? "Pinned" : "Not Pinned"}</p>
+		<div
+			className={`flex flex-col justify-between gap-2 rounded-lg ${note.pinned ? "bg-yellow-800" : "bg-blue-800/30"} w-90 h-50 p-4 shadow-lg`}
+		>
+			<div className="flex items-center justify-between">
+				<h2 className="text-xl font-bold">{note.title.toUpperCase()}</h2>
+				<Edit size={20} />
+			</div>
+			<p className="text-center">{note.content}</p>
+			<div className="flex items-center justify-between">
+				{note.pinned ? <Star size={20} /> : <StarOff size={20} />}
+				<Trash2 size={20} />
+			</div>
 		</div>
 	)
 }
