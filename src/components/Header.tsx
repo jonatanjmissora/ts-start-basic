@@ -22,8 +22,8 @@ const navLinks = [
 		icon: <SquareFunction size={20} />,
 	},
 	{
-		text: "Menu 2",
-		to: "/menu2",
+		text: "Mongo DB",
+		to: "/mongodb",
 		icon: <Network size={20} />,
 	},
 	{
