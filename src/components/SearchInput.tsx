@@ -1,21 +1,34 @@
 import { useNavigate, useSearch } from "@tanstack/react-router"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useDebouncedValue } from "@/lib/utils"
 
 export function SearchInput() {
 	const navigate = useNavigate({ from: "/fake-api" })
 	const { q } = useSearch({ from: "/fake-api/" })
+
 	const [inputValue, setInputValue] = useState(q ?? "")
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInputValue(e.target.value)
+	const debouncedValue = useDebouncedValue(inputValue, 400)
+
+	// sincroniza input ← URL al entrar/back/forward
+	useEffect(() => {
+		setInputValue(q ?? "")
+	}, [q])
+
+	// cuando cambia el debounced, actualiza la URL
+	useEffect(() => {
 		navigate({
-			search: prev => ({ ...prev, q: e.target.value ?? undefined }),
-			replace: true,
+			search: prev => ({
+				...prev,
+				q: debouncedValue || undefined,
+			}),
+			replace: true, // no ensucia el history
 		})
-	}
+	}, [debouncedValue, navigate])
+
 	const resetInput = () => {
 		setInputValue("")
 		navigate({
-			search: prev => ({ ...prev, q: undefined }),
+			search: { q: undefined },
 			replace: true,
 		})
 	}
@@ -24,7 +37,7 @@ export function SearchInput() {
 			<input
 				type="text"
 				value={inputValue}
-				onChange={handleChange}
+				onChange={e => setInputValue(e.target.value)}
 				placeholder="Buscar"
 				className="border border-gray-300 rounded px-2 py-1"
 			/>

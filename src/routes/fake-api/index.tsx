@@ -45,7 +45,7 @@ export default function ProductsList() {
 					key={product.id}
 					to="/fake-api/$productId"
 					params={{ productId: String(product.id) }}
-					// search={{ q }}
+					search={{ q }}
 				>
 					<Product product={product} />
 				</Link>

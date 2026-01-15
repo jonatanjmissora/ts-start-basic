@@ -1,15 +1,19 @@
 import { ProductType } from "@/lib/types/products"
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router"
 import { Product } from "."
+import z from "zod"
 
 export const Route = createFileRoute("/fake-api/$productId")({
+	validateSearch: z.object({
+		q: z.string().optional(),
+	}),
 	component: RouteComponent,
 })
 
 function RouteComponent() {
 	const { productId } = Route.useParams()
 	const router = useRouter()
-	// const { q } = Route.useSearch()
+	const { q } = Route.useSearch()
 	const { queryClient } = router.options.context
 	const products = queryClient.getQueryData(["products"]) as
 		| ProductType[]
@@ -19,7 +23,7 @@ function RouteComponent() {
 		<article className="w-full flex-1 flex items-center p-10 flex-col gap-4">
 			<Link
 				to="/fake-api"
-				// search={{ q }}
+				search={{ q }}
 				className="underline mr-auto text-lg font-semibold"
 			>
 				Volver
