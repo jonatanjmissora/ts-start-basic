@@ -1,6 +1,7 @@
 import { useNavigate, useSearch } from "@tanstack/react-router"
 import { useState, useEffect } from "react"
 import { useDebouncedValue } from "@/lib/utils"
+import { X } from "lucide-react"
 
 export function SearchInput() {
 	const navigate = useNavigate({ from: "/fake-api" })
@@ -33,7 +34,7 @@ export function SearchInput() {
 		})
 	}
 	return (
-		<div className="flex items-center gap-4">
+		<div className="relative flex items-center">
 			<input
 				type="text"
 				value={inputValue}
@@ -41,12 +42,10 @@ export function SearchInput() {
 				placeholder="Buscar"
 				className="border border-gray-300 rounded px-2 py-1"
 			/>
-			<button
-				className="bg-blue-500 text-white px-4 py-2 rounded"
+			<X
+				className={`absolute right-2 top-1/2 -translate-y-1/2 size-5 cursor-pointer hover:bg-gray-700 ${inputValue ? "block" : "hidden"}`}
 				onClick={resetInput}
-			>
-				Clear
-			</button>
+			/>
 		</div>
 	)
 }
