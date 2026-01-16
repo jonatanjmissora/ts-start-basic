@@ -8,6 +8,7 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import { Edit, Plus, Star, StarOff, Trash2 } from "lucide-react"
 import { Suspense } from "react"
 import Filters from "./-components/filters"
+import { deleteMongoNote } from "@/server/notes"
 
 export const Route = createFileRoute("/mongodb/")({
 	validateSearch: searchNotesSchema,
@@ -59,6 +60,18 @@ export default function NotesList() {
 }
 
 const NoteElement = ({ note }: { note: Note }) => {
+	const handleDelete = async (id: string) => {
+		try {
+			const result = await deleteMongoNote({ data: { id } })
+			console.log("Delete result:", result)
+			//   setDeleteConfirmId(null);
+			//   await refreshNotes();
+		} catch (error) {
+			console.error("Failed to delete note:", error)
+			alert("Failed to delete note")
+		}
+	}
+
 	return (
 		<div
 			className={`flex flex-col justify-between gap-2 rounded-lg ${note.pinned ? "bg-yellow-800" : "bg-blue-800/30"} w-90 h-50 p-4 shadow-lg`}
@@ -68,10 +81,13 @@ const NoteElement = ({ note }: { note: Note }) => {
 				<Edit size={20} />
 			</div>
 			<p className="text-center">{note.content}</p>
-			<div className="flex items-center justify-between">
+			<button
+				className="flex items-center justify-between"
+				onClick={() => handleDelete(note.id)}
+			>
 				{note.pinned ? <Star size={20} /> : <StarOff size={20} />}
 				<Trash2 size={20} />
-			</div>
+			</button>
 		</div>
 	)
 }

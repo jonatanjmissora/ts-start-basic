@@ -57,9 +57,12 @@ export interface Note {
 }
 
 /**
- * Document type without _id (for insertOne)
+ * Document type for MongoDB operations
+ * _id is optional to allow MongoDB to generate it automatically
  */
-export type NoteDocument = Omit<NoteResponse, "_id">
+export type NoteDocument = Omit<NoteResponse, "_id"> & {
+	_id?: ObjectId
+}
 
 /**
  * Converter function: MongoDB document → Client-friendly note

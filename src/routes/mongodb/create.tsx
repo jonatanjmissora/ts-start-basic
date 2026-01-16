@@ -18,9 +18,11 @@ function RouteComponent() {
 
 		setIsCreating(true)
 		try {
-			await createMongoNote({
+			const response = await createMongoNote({
 				data: { title: title.trim(), content: content.trim() },
 			})
+
+			console.log("En componente", response)
 
 			// Clear form
 			setTitle("")
