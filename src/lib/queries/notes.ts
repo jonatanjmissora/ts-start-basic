@@ -5,7 +5,7 @@ import {
 	useMutation,
 	useSuspenseQuery,
 } from "@tanstack/react-query"
-import { Note, NoteDocument, SearchNotesParams } from "../types/notes"
+import { Note, SearchNotesParams } from "../types/notes"
 
 export const notesQueryOptions = queryOptions({
 	queryKey: ["notes"],
@@ -15,13 +15,17 @@ export const notesQueryOptions = queryOptions({
 export const useCreateMongoNote = (queryClient: QueryClient) => {
 	return useMutation({
 		mutationFn: createMongoNote,
-		onSuccess: async (newNote: NoteDocument) => {
+		onSuccess: async ({ success, newNote }) => {
 			await queryClient.cancelQueries({ queryKey: ["notes"] })
 			const notes = queryClient.getQueryData<Note[]>(["notes"])
 			if (!notes) return
+			console.log("NEW NOTE", newNote, success)
 			const newNotes = [newNote, ...(notes || [])]
 			queryClient.setQueryData(["notes"], newNotes)
 			await queryClient.invalidateQueries({ queryKey: ["notes"] })
+		},
+		onError: async err => {
+			console.log("Error creating note", err)
 		},
 	})
 }

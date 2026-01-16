@@ -1,40 +1,29 @@
-import { createMongoNote } from "@/server/notes"
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { Plus } from "lucide-react"
 import { useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
+import { useCreateMongoNote } from "@/lib/queries/notes"
 
 export const Route = createFileRoute("/mongodb/create")({
 	component: RouteComponent,
 })
 
 function RouteComponent() {
+	const navigate = useNavigate()
 	const [title, setTitle] = useState("")
 	const [content, setContent] = useState("")
 	const queryClient = useQueryClient()
 
-	const { mutate: createNote, isPending: isCreating } = useMutation({
-		mutationFn: createMongoNote,
-		onSuccess: () => {
-			// Clear form on success
-			setTitle("")
-			setContent("")
-			// Invalidate and refetch the notes query
-			queryClient.invalidateQueries({ queryKey: ["notes"] })
-		},
-		onError: error => {
-			console.error("Failed to create note:", error)
-			alert("Failed to create note")
-		},
-	})
+	const { mutate: createNote, isPending } = useCreateMongoNote(queryClient)
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 		if (!title.trim()) return
 
-		createNote({
-			data: { title: title.trim(), content: content.trim() },
-		})
+		createNote(
+			{ data: { title: title.trim(), content: content.trim() } },
+			{ onSuccess: () => navigate({ to: "/mongodb", replace: true }) }
+		)
 	}
 
 	return (
@@ -64,7 +53,7 @@ function RouteComponent() {
 						type="submit"
 						className="bg-blue-500/70 p-2 rounded cursor-pointer"
 					>
-						{isCreating ? "Creando..." : "Crear"}
+						{isPending ? "Creando..." : "Crear"}
 					</button>
 				</form>
 			</article>

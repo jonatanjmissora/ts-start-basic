@@ -4,6 +4,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query"
 export const productsQueryOptions = queryOptions({
 	queryKey: ["products"],
 	queryFn: () => getProducts(),
+	refetchInterval: 15 * 1000,
 })
 
 export const useSuspenseFilteredProducts = (q?: string) => {
