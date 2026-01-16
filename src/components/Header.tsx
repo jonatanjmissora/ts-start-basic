@@ -27,8 +27,8 @@ const navLinks = [
 		icon: <Network size={20} />,
 	},
 	{
-		text: "Menu 3",
-		to: "/menu3",
+		text: "Test",
+		to: "/test",
 		icon: <StickyNote size={20} />,
 	},
 ]

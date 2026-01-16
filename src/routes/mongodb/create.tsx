@@ -2,6 +2,7 @@ import { createMongoNote } from "@/server/notes"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Plus } from "lucide-react"
 import { useState } from "react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export const Route = createFileRoute("/mongodb/create")({
 	component: RouteComponent,
@@ -10,32 +11,30 @@ export const Route = createFileRoute("/mongodb/create")({
 function RouteComponent() {
 	const [title, setTitle] = useState("")
 	const [content, setContent] = useState("")
-	const [isCreating, setIsCreating] = useState(false)
+	const queryClient = useQueryClient()
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const { mutate: createNote, isPending: isCreating } = useMutation({
+		mutationFn: createMongoNote,
+		onSuccess: () => {
+			// Clear form on success
+			setTitle("")
+			setContent("")
+			// Invalidate and refetch the notes query
+			queryClient.invalidateQueries({ queryKey: ["notes"] })
+		},
+		onError: error => {
+			console.error("Failed to create note:", error)
+			alert("Failed to create note")
+		},
+	})
+
+	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 		if (!title.trim()) return
 
-		setIsCreating(true)
-		try {
-			const response = await createMongoNote({
-				data: { title: title.trim(), content: content.trim() },
-			})
-
-			console.log("En componente", response)
-
-			// Clear form
-			setTitle("")
-			setContent("")
-
-			// Refresh list
-			//   await refreshNotes();
-		} catch (error) {
-			console.error("Failed to create note:", error)
-			alert("Failed to create note")
-		} finally {
-			setIsCreating(false)
-		}
+		createNote({
+			data: { title: title.trim(), content: content.trim() },
+		})
 	}
 
 	return (

@@ -33,6 +33,7 @@ export const createMongoNote = createServerFn({ method: "POST" })
 	.inputValidator(createNoteSchema) // ← Automatic validation!
 	.handler(async ({ data }) => {
 		try {
+			await delay()
 			const collection = await getNotesCollection()
 
 			// Create note document
@@ -65,6 +66,7 @@ export const deleteMongoNote = createServerFn({ method: "POST" })
 	.inputValidator(deleteNoteSchema)
 	.handler(async ({ data }) => {
 		try {
+			await delay()
 			const collection = await getNotesCollection()
 
 			const result = await collection.deleteOne({
