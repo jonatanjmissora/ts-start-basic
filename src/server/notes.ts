@@ -13,12 +13,11 @@ import { ObjectId } from "mongodb"
 export const getMongoNotes = createServerFn({ method: "GET" }).handler(
 	async (): Promise<Note[]> => {
 		try {
+			await delay()
 			const collection = await getNotesCollection()
 
 			// Query database with sort
 			const docs = await collection.find({}).sort({ updatedAt: -1 }).toArray()
-
-			await delay()
 
 			// Convert MongoDB documents to client-friendly format
 			return docs.map(documentToNote)

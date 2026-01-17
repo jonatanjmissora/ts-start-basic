@@ -13,7 +13,7 @@ import { deleteMongoNote } from "@/server/notes"
 export const Route = createFileRoute("/mongodb/")({
 	validateSearch: searchNotesSchema,
 	component: RouteComponent,
-	loader: async ({ context }) => {
+	loader: ({ context }) => {
 		context.queryClient.ensureQueryData(notesQueryOptions)
 	},
 })

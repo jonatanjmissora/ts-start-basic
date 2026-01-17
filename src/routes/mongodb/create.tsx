@@ -22,7 +22,18 @@ function RouteComponent() {
 
 		createNote(
 			{ data: { title: title.trim(), content: content.trim() } },
-			{ onSuccess: () => navigate({ to: "/mongodb", replace: true }) }
+			{
+				onSuccess: () => {
+					navigate({ to: "/mongodb", replace: true })
+					setTitle("")
+					setContent("")
+					// sonner mesage goes here
+				},
+				onError: error => {
+					console.error("Error creating note:", error)
+					// sonner error message goes here
+				},
+			}
 		)
 	}
 

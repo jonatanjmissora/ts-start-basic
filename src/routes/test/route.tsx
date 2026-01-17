@@ -1,18 +1,10 @@
-import { ProductsSkeleton } from "@/components/ProductSkeltons"
-import { SearchInput } from "@/components/SearchInput"
-import {
-	productsQueryOptions,
-	useSuspenseFilteredProducts,
-} from "@/lib/queries/products"
-import { ProductType } from "@/lib/types/products"
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router"
 import { Suspense } from "react"
-import z from "zod"
+import { productsQueryOptions } from "@/lib/queries/products"
+import { ProductType } from "@/lib/types/products"
 
-export const Route = createFileRoute("/fake-api/")({
-	validateSearch: z.object({
-		q: z.string().optional(),
-	}),
+export const Route = createFileRoute("/test")({
 	component: RouteComponent,
 	loader: ({ context }) => {
 		context.queryClient.ensureQueryData(productsQueryOptions)
@@ -21,33 +13,33 @@ export const Route = createFileRoute("/fake-api/")({
 
 function RouteComponent() {
 	return (
-		<article className="flex-1 w-full p-10 ">
-			<div className="flex items-enter justify-between">
-				<span className="text-2xl font-bold mb-4">PRODUCTS PAGE</span>
-				<SearchInput />
-			</div>
+		<article className="flex-1 w-full p-10 flex gap-10 ">
+			<div className="flex flex-col gap-3">
+				<div className="flex items-enter justify-between">
+					<span className="text-2xl font-bold mb-4">PRODUCTS PAGE</span>
+				</div>
 
-			<Suspense fallback={<ProductsSkeleton />}>
-				<ProductsList />
-			</Suspense>
+				<Suspense fallback={<div>CARGANDO...</div>}>
+					<ProductsList />
+				</Suspense>
+			</div>
+			<Outlet />
 		</article>
 	)
 }
 
 export default function ProductsList() {
-	const { q } = Route.useSearch()
-	const products = useSuspenseFilteredProducts(q).data
+	const products = useSuspenseQuery(productsQueryOptions).data
 
 	return (
-		<div className="flex flex-wrap gap-4 my-10">
+		<div className="flex flex-col gap-4 my-10">
 			{products.map((product: ProductType) => (
 				<Link
 					key={product.id}
-					to="/fake-api/$productId"
+					to="/test/$productId"
 					params={{ productId: String(product.id) }}
-					search={{ q }}
 				>
-					<Product product={product} />
+					{product.title}
 				</Link>
 			))}
 		</div>

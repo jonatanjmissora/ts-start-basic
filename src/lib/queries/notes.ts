@@ -10,6 +10,7 @@ import { Note, SearchNotesParams } from "../types/notes"
 export const notesQueryOptions = queryOptions({
 	queryKey: ["notes"],
 	queryFn: () => getMongoNotes(),
+	refetchInterval: 60 * 1000,
 })
 
 export const useCreateMongoNote = (queryClient: QueryClient) => {
