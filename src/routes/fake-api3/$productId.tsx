@@ -5,20 +5,17 @@ import { Suspense } from "react"
 import z from "zod"
 import { Product } from "../fake-api"
 
-export const Route = createFileRoute("/test/$productId")({
+export const Route = createFileRoute("/fake-api3/$productId")({
 	validateSearch: z.object({
 		q: z.string().optional(),
 	}),
 	component: RouteComponent,
-	loader: ({ params, context }) => {
-		context.queryClient.ensureQueryData(productQueryOptions(params.productId))
-	},
 })
 
 function RouteComponent() {
 	return (
 		<article className="w-full flex-1 flex items-center p-10 flex-col gap-4">
-			<Link to="/fake-api2" className="underline mr-auto text-lg font-semibold">
+			<Link to="/fake-api3" className="underline mr-auto text-lg font-semibold">
 				Volver
 			</Link>
 			<div className="w-1/2 h-max">
@@ -32,6 +29,6 @@ function RouteComponent() {
 
 const ProductSuspense = () => {
 	const { productId } = Route.useParams()
-	const product = useSuspenseQuery(productQueryOptions(productId))
-	return <Product product={product.data} />
+	const { data: product } = useSuspenseQuery(productQueryOptions(productId))
+	return <Product product={product} />
 }

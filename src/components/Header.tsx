@@ -22,6 +22,21 @@ const navLinks = [
 		icon: <SquareFunction size={20} />,
 	},
 	{
+		text: "Fake Api 2",
+		to: "/fake-api2",
+		icon: <SquareFunction size={20} />,
+	},
+	{
+		text: "Fake Api 3",
+		to: "/fake-api3",
+		icon: <SquareFunction size={20} />,
+	},
+	{
+		text: "Fake Api 4",
+		to: "/fake-api4",
+		icon: <SquareFunction size={20} />,
+	},
+	{
 		text: "Mongo DB",
 		to: "/mongodb",
 		icon: <Network size={20} />,

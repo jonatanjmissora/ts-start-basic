@@ -27,6 +27,16 @@ function RouteComponent() {
 				<SearchInput />
 			</div>
 
+			<p>
+				en index.tsx, pre-cargo con el loader cuando hago hover en el link "Fake
+				Api", envuelvo al componente con Suspense, y en ProductList consumo con
+				el useSuspenseQuery()
+			</p>
+			<p>
+				Aca en productId no cargo nada de la api, porque uso el cache para
+				encontrar el elemento
+			</p>
+
 			<Suspense fallback={<ProductsSkeleton />}>
 				<ProductsList />
 			</Suspense>

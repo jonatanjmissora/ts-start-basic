@@ -1,10 +1,10 @@
+import { productsQueryOptions } from "@/lib/queries/products"
+import { ProductType } from "@/lib/types/products"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router"
 import { Suspense } from "react"
-import { productsQueryOptions } from "@/lib/queries/products"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { ProductType } from "@/lib/types/products"
 
-export const Route = createFileRoute("/test")({
+export const Route = createFileRoute("/fake-api4")({
 	component: RouteComponent,
 	loader: ({ context }) => {
 		context.queryClient.ensureQueryData(productsQueryOptions)
@@ -15,6 +15,12 @@ function RouteComponent() {
 	return (
 		<div className="space-y-4">
 			<h1 className="text-2xl font-bold">Dashboard</h1>
+
+			<p>
+				Aca cargo lista en loader, y luego en el loader de $productId pre-cargo
+				la query del producto para que cuando se renderice el componente ya esté
+				en cache.
+			</p>
 
 			<Suspense fallback={<div>Cargando sección...</div>}>
 				<ProductList />

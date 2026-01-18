@@ -1,18 +1,15 @@
-import { productQueryOptions } from "@/lib/queries/products"
-import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Suspense } from "react"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { productQueryOptions } from "@/lib/queries/products"
 import z from "zod"
 import { Product } from "../fake-api"
 
-export const Route = createFileRoute("/test/$productId")({
+export const Route = createFileRoute("/fake-api2/$productId")({
 	validateSearch: z.object({
 		q: z.string().optional(),
 	}),
 	component: RouteComponent,
-	loader: ({ params, context }) => {
-		context.queryClient.ensureQueryData(productQueryOptions(params.productId))
-	},
 })
 
 function RouteComponent() {

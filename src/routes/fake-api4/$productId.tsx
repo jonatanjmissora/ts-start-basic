@@ -5,7 +5,7 @@ import { Suspense } from "react"
 import z from "zod"
 import { Product } from "../fake-api"
 
-export const Route = createFileRoute("/test/$productId")({
+export const Route = createFileRoute("/fake-api4/$productId")({
 	validateSearch: z.object({
 		q: z.string().optional(),
 	}),
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/test/$productId")({
 function RouteComponent() {
 	return (
 		<article className="w-full flex-1 flex items-center p-10 flex-col gap-4">
-			<Link to="/fake-api2" className="underline mr-auto text-lg font-semibold">
+			<Link to="/fake-api4" className="underline mr-auto text-lg font-semibold">
 				Volver
 			</Link>
 			<div className="w-1/2 h-max">
