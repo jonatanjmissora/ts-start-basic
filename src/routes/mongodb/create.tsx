@@ -12,13 +12,13 @@ function RouteComponent() {
 	const navigate = useNavigate()
 	const [title, setTitle] = useState("")
 	const [content, setContent] = useState("")
+	const [error, setError] = useState("")
 	const queryClient = useQueryClient()
 
 	const { mutate: createNote, isPending } = useCreateMongoNote(queryClient)
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
-		if (!title.trim()) return
 
 		createNote(
 			{ data: { title: title.trim(), content: content.trim() } },
@@ -27,10 +27,11 @@ function RouteComponent() {
 					navigate({ to: "/mongodb", replace: true })
 					setTitle("")
 					setContent("")
+					setError("")
 					// sonner mesage goes here
 				},
 				onError: error => {
-					console.error("Error creating note:", error)
+					setError(`COMPONENT: ${error}`)
 					// sonner error message goes here
 				},
 			}
@@ -53,12 +54,14 @@ function RouteComponent() {
 						className="bg-blue-100 p-2 text-black"
 						value={title}
 						onChange={e => setTitle(e.target.value)}
+						required
 					/>
 					<textarea
 						placeholder="Contenido"
 						className="bg-blue-100 p-2 text-black"
 						value={content}
 						onChange={e => setContent(e.target.value)}
+						required
 					></textarea>
 					<button
 						type="submit"
@@ -66,6 +69,7 @@ function RouteComponent() {
 					>
 						{isPending ? "Creando..." : "Crear"}
 					</button>
+					{error && <p className="text-red-600">{error}</p>}
 				</form>
 			</article>
 		</section>

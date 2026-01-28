@@ -49,21 +49,12 @@ export const createMongoNote = createServerFn({ method: "POST" })
 				_id: new ObjectId(),
 			})
 
-			// Fetch the created note
-			// const created = await collection.findOne({ _id: result.insertedId })
-
-			// if (!created) {
-			// throw new Error("Note created but could not be retrieved")
-			// }
-
-			console.log("New note created:", newNote)
 			return {
-				success: true,
 				newNote: documentToNote({ ...newNote, _id: result.insertedId }),
 			}
-		} catch (error) {
-			console.error("Error creating note:", error)
-			throw new Error("Failed to create note")
+		} catch (error: any) {
+			console.error("SERVER: Error creating note:", error)
+			throw new Error(`SERVER: ${error?.message}`)
 		}
 	})
 

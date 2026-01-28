@@ -16,18 +16,18 @@ export const notesQueryOptions = queryOptions({
 export const useCreateMongoNote = (queryClient: QueryClient) => {
 	return useMutation({
 		mutationFn: createMongoNote,
-		onSuccess: async ({ success, newNote }) => {
+		onSuccess: async ({ newNote }) => {
 			await queryClient.cancelQueries({ queryKey: ["notes"] })
 			const notes = queryClient.getQueryData<Note[]>(["notes"])
 			if (!notes) return
-			console.log("NEW NOTE", newNote, success)
+			console.log("NEW NOTE", newNote)
 			const newNotes = [newNote, ...(notes || [])]
 			queryClient.setQueryData(["notes"], newNotes)
 			await queryClient.invalidateQueries({ queryKey: ["notes"] })
 		},
-		onError: async err => {
-			console.log("Error creating note", err)
-		},
+		// onError: async err => {
+		// 	console.error(err)
+		// },
 	})
 }
 
