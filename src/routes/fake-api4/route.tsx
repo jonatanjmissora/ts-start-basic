@@ -37,7 +37,7 @@ const ProductList = () => {
 			{products.slice(0, 3).map((product: ProductType) => (
 				<Link
 					key={product.id}
-					to="/test/$productId"
+					to="/fake-api4/$productId"
 					activeProps={{ className: "text-blue-500" }}
 					params={{ productId: String(product.id) }}
 				>
