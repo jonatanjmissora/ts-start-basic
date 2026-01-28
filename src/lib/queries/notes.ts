@@ -1,4 +1,4 @@
-import { createMongoNote, getMongoNotes } from "@/server/notes"
+import { createMongoNote, deleteMongoNote, getMongoNotes } from "@/server/notes"
 import {
 	QueryClient,
 	queryOptions,
@@ -25,9 +25,6 @@ export const useCreateMongoNote = (queryClient: QueryClient) => {
 			queryClient.setQueryData(["notes"], newNotes)
 			await queryClient.invalidateQueries({ queryKey: ["notes"] })
 		},
-		// onError: async err => {
-		// 	console.error(err)
-		// },
 	})
 }
 
@@ -46,6 +43,26 @@ export const useSuspenseFilteredNotes = ({
 
 			if (filter === "favorites") return sortedNotes.filter(note => note.pinned)
 			return sortedNotes
+		},
+	})
+}
+
+export const useDeleteMongoNote = (queryClient: QueryClient) => {
+	return useMutation({
+		mutationFn: deleteMongoNote,
+		onSuccess: async (_data, variables) => {
+			await queryClient.cancelQueries({ queryKey: ["notes"] })
+			const oldNotes = queryClient.getQueryData<Note[]>(["notes"])
+			if (!oldNotes) return
+			const deletedNote = oldNotes.find(
+				oldNote => oldNote.id === variables.data.id
+			)
+			console.log("DELETED NOTE", deletedNote)
+			const newNotes = oldNotes.filter(
+				oldNote => oldNote.id !== variables.data.id
+			)
+			queryClient.setQueryData(["notes"], newNotes)
+			await queryClient.invalidateQueries({ queryKey: ["notes"] })
 		},
 	})
 }

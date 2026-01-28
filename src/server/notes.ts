@@ -74,12 +74,9 @@ export const deleteMongoNote = createServerFn({ method: "POST" })
 				throw new Error("Note not found")
 			}
 
-			return { success: true }
-		} catch (error) {
-			console.error("Error deleting note:", error)
-			if (error instanceof Error && error.message === "Note not found") {
-				throw error
-			}
-			throw new Error("Failed to delete note")
+			return { note: data }
+		} catch (error: any) {
+			console.error("SERVER: Error creating note:", error)
+			throw new Error(`SERVER: ${error?.message}`)
 		}
 	})

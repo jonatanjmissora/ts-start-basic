@@ -15,12 +15,12 @@ function RouteComponent() {
 	const [error, setError] = useState("")
 	const queryClient = useQueryClient()
 
-	const { mutate: createNote, isPending } = useCreateMongoNote(queryClient)
+	const { mutate: createMongoNote, isPending } = useCreateMongoNote(queryClient)
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 
-		createNote(
+		createMongoNote(
 			{ data: { title: title.trim(), content: content.trim() } },
 			{
 				onSuccess: () => {
