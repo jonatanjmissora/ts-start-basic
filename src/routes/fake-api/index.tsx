@@ -1,3 +1,4 @@
+import { ProductElement } from "@/components/ProductElement"
 import { ProductsSkeleton } from "@/components/ProductSkeltons"
 import { SearchInput } from "@/components/SearchInput"
 import {
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/fake-api/")({
 
 function RouteComponent() {
 	return (
-		<article className="flex-1 w-full p-10 ">
+		<article className="flex-1 w-full p-10">
 			<div className="flex items-enter justify-between">
 				<span className="text-2xl font-bold mb-4">PRODUCTS PAGE</span>
 				<SearchInput />
@@ -57,34 +58,9 @@ export default function ProductsList() {
 					params={{ productId: String(product.id) }}
 					search={{ q }}
 				>
-					<Product product={product} />
+					<ProductElement product={product} />
 				</Link>
 			))}
-		</div>
-	)
-}
-
-interface ProductProps {
-	product: ProductType | undefined
-}
-
-export function Product({ product }: ProductProps) {
-	if (!product) {
-		return <div>Product not found</div>
-	}
-	return (
-		<div
-			key={product?.id}
-			className={`flex flex-col justify-between gap-2 rounded-lg bg-blue-800 w-40 h-40 p-2 shadow-lg`}
-		>
-			<img src={product.image} alt="" className="h-24 object-contain" />
-			<div className="flex flex-col justify-between gap-2 text-xs">
-				<h2 className="truncate">{product.title}</h2>
-				<div className="flex justify-between items-center">
-					<span>{product.category}</span>
-					<span>$ {product.price}</span>
-				</div>
-			</div>
 		</div>
 	)
 }

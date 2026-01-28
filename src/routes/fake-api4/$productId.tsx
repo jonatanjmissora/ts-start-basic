@@ -3,7 +3,8 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Suspense } from "react"
 import z from "zod"
-import { Product } from "../fake-api"
+import { ProductElement } from "@/components/ProductElement"
+import { ProductsSkeleton } from "@/components/ProductSkeltons"
 
 export const Route = createFileRoute("/fake-api4/$productId")({
 	validateSearch: z.object({
@@ -22,7 +23,7 @@ function RouteComponent() {
 				Volver
 			</Link>
 			<div className="w-1/2 h-max">
-				<Suspense fallback={<div>Cargando...</div>}>
+				<Suspense fallback={<ProductsSkeleton qnt={1} />}>
 					<ProductSuspense />
 				</Suspense>
 			</div>
@@ -33,5 +34,5 @@ function RouteComponent() {
 const ProductSuspense = () => {
 	const { productId } = Route.useParams()
 	const product = useSuspenseQuery(productQueryOptions(productId))
-	return <Product product={product.data} />
+	return <ProductElement product={product.data} />
 }

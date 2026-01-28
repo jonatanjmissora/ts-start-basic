@@ -1,6 +1,6 @@
+import { ProductElement } from "@/components/ProductElement"
 import { ProductType } from "@/lib/types/products"
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router"
-import { Product } from "."
 import z from "zod"
 
 export const Route = createFileRoute("/fake-api/$productId")({
@@ -29,7 +29,7 @@ function RouteComponent() {
 				Volver
 			</Link>
 			<div className="w-1/2 h-max">
-				<Product product={product} />
+				<ProductElement product={product} />
 			</div>
 		</article>
 	)

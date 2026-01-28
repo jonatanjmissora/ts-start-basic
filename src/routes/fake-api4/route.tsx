@@ -1,3 +1,5 @@
+import { ProductElement } from "@/components/ProductElement"
+import { ProductsSkeleton } from "@/components/ProductSkeltons"
 import { productsQueryOptions } from "@/lib/queries/products"
 import { ProductType } from "@/lib/types/products"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -13,7 +15,7 @@ export const Route = createFileRoute("/fake-api4")({
 
 function RouteComponent() {
 	return (
-		<div className="space-y-4">
+		<div className="space-y-4 p-10">
 			<h1 className="text-2xl font-bold">Dashboard</h1>
 
 			<p>
@@ -22,7 +24,7 @@ function RouteComponent() {
 				en cache.
 			</p>
 
-			<Suspense fallback={<div>Cargando sección...</div>}>
+			<Suspense fallback={<ProductsSkeleton qnt={3} />}>
 				<ProductList />
 			</Suspense>
 			<Outlet />
@@ -33,7 +35,7 @@ function RouteComponent() {
 const ProductList = () => {
 	const { data: products } = useSuspenseQuery(productsQueryOptions)
 	return (
-		<div className="flex flex-col gap-4 my-10">
+		<div className="flex gap-4 my-10">
 			{products.slice(0, 3).map((product: ProductType) => (
 				<Link
 					key={product.id}
@@ -41,7 +43,7 @@ const ProductList = () => {
 					activeProps={{ className: "text-blue-500" }}
 					params={{ productId: String(product.id) }}
 				>
-					{product.title}
+					<ProductElement product={product} />
 				</Link>
 			))}
 		</div>

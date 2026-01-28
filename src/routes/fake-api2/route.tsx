@@ -6,6 +6,8 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
 import { Suspense } from "react"
 import { Outlet } from "@tanstack/react-router"
+import { ProductElement } from "@/components/ProductElement"
+import { ProductsSkeleton } from "@/components/ProductSkeltons"
 
 export const Route = createFileRoute("/fake-api2")({
 	component: RouteComponent,
@@ -19,7 +21,7 @@ export const Route = createFileRoute("/fake-api2")({
 
 function RouteComponent() {
 	return (
-		<article className="flex-1 w-full p-10 flex gap-10 ">
+		<article className="flex-1 w-full p-10 flex gap-10">
 			<div className="flex flex-col gap-3">
 				<div className="flex items-enter justify-between">
 					<span className="text-2xl font-bold mb-4">PRODUCTS PAGE</span>
@@ -37,7 +39,7 @@ function RouteComponent() {
 					inmediato porque uso el query de "products"
 				</p>
 
-				<Suspense fallback={<div>CARGANDO...</div>}>
+				<Suspense fallback={<ProductsSkeleton qnt={3} />}>
 					<ProductsList />
 				</Suspense>
 			</div>
@@ -50,7 +52,7 @@ export default function ProductsList() {
 	const products = useSuspenseQuery(productsQueryOptions).data
 
 	return (
-		<div className="flex flex-col gap-4 my-10">
+		<div className="flex gap-4 my-10">
 			{products.slice(0, 3).map((product: ProductType) => (
 				<Link
 					key={product.id}
@@ -58,7 +60,7 @@ export default function ProductsList() {
 					activeProps={{ className: "text-blue-500" }}
 					params={{ productId: String(product.id) }}
 				>
-					{product.title}
+					<ProductElement product={product} />
 				</Link>
 			))}
 		</div>
