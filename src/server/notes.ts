@@ -82,7 +82,7 @@ export const deleteMongoNote = createServerFn({ method: "POST" })
 		}
 	})
 
-export const pinnedMongoNote = createServerFn({ method: "POST" })
+export const updateMongoNote = createServerFn({ method: "POST" })
 	.inputValidator(updateNoteSchema)
 	.handler(async ({ data: updatedNote }) => {
 		try {
@@ -91,7 +91,11 @@ export const pinnedMongoNote = createServerFn({ method: "POST" })
 			const res = await collection.updateOne(
 				{ _id: new ObjectId(updatedNote.id) },
 				{
-					$set: { pinned: updatedNote.pinned },
+					$set: {
+						title: updatedNote.title,
+						content: updatedNote.content,
+						pinned: updatedNote.pinned,
+					},
 				}
 			)
 			if (res.modifiedCount !== 1) {

@@ -1,4 +1,4 @@
-import { usePinnedMongoNote } from "@/lib/queries/notes"
+import { useUpdateMongoNote } from "@/lib/queries/notes"
 import { Note } from "@/lib/types/notes"
 import { useQueryClient } from "@tanstack/react-query"
 import { Star, StarOff } from "lucide-react"
@@ -7,13 +7,20 @@ import { useState } from "react"
 export const PinnedButton = ({ note }: { note: Note }) => {
 	const [checked, setChecked] = useState(note.pinned)
 	const queryClient = useQueryClient()
-	const { mutateAsync: pinnedMongoNote, isPending } =
-		usePinnedMongoNote(queryClient)
+	const { mutateAsync: updateMongoNote, isPending } =
+		useUpdateMongoNote(queryClient)
 
 	const handleChange = () => {
 		const updatedNote = { ...note, pinned: !note.pinned }
-		pinnedMongoNote(
-			{ data: updatedNote },
+		updateMongoNote(
+			{
+				data: {
+					id: note.id,
+					title: updatedNote.title,
+					content: updatedNote.content,
+					pinned: updatedNote.pinned,
+				},
+			},
 			{
 				onSuccess: () => {
 					setChecked(!checked)

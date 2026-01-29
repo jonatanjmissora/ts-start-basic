@@ -61,13 +61,25 @@ export default function NotesList() {
 }
 
 const NoteElement = ({ note }: { note: Note }) => {
+	const { filter, sort } = Route.useSearch()
 	return (
 		<div
 			className={`flex flex-col justify-between gap-2 rounded-lg ${note.pinned ? "bg-yellow-800" : "bg-blue-800/30"} w-90 h-50 p-4 shadow-lg`}
 		>
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-bold">{note.title.toUpperCase()}</h2>
-				<Edit size={20} />
+				<Link
+					to="/mongodb/edit/$noteId"
+					params={{
+						noteId: note.id,
+					}}
+					search={{
+						filter,
+						sort,
+					}}
+				>
+					<Edit size={20} />
+				</Link>
 			</div>
 			<p className="text-center">{note.content}</p>
 			<div className="flex items-center justify-between">

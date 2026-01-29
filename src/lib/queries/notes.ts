@@ -2,7 +2,7 @@ import {
 	createMongoNote,
 	deleteMongoNote,
 	getMongoNotes,
-	pinnedMongoNote,
+	updateMongoNote,
 } from "@/server/notes"
 import {
 	QueryClient,
@@ -72,9 +72,9 @@ export const useDeleteMongoNote = (queryClient: QueryClient) => {
 	})
 }
 
-export const usePinnedMongoNote = (queryClient: QueryClient) => {
+export const useUpdateMongoNote = (queryClient: QueryClient) => {
 	return useMutation({
-		mutationFn: pinnedMongoNote,
+		mutationFn: updateMongoNote,
 		onSuccess: async ({ updatedNote }: { updatedNote: Note }) => {
 			if (!updatedNote.id) return
 			await queryClient.cancelQueries({ queryKey: ["notes"] })
