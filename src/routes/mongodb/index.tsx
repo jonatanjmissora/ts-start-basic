@@ -8,8 +8,8 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import { Edit, Plus } from "lucide-react"
 import { Suspense } from "react"
 import Filters from "./-components/filters"
-import { DeleteButton } from "./-components/delete"
 import { PinnedButton } from "./-components/pinned"
+import { AlertDialogDelete } from "./-components/alert-dialog-delete"
 
 export const Route = createFileRoute("/mongodb/")({
 	validateSearch: searchNotesSchema,
@@ -72,7 +72,7 @@ const NoteElement = ({ note }: { note: Note }) => {
 			<p className="text-center">{note.content}</p>
 			<div className="flex items-center justify-between">
 				<PinnedButton note={note} />
-				<DeleteButton note={note} />
+				<AlertDialogDelete note={note} />
 			</div>
 		</div>
 	)
