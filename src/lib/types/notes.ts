@@ -15,11 +15,13 @@ export const createNoteSchema = z.object({
 
 export const updateNoteSchema = z.object({
 	id: z.string().min(1, "Note ID is required"),
-	title: z.string().min(1).max(100).optional(),
-	content: z.string().max(500).optional(),
+	title: z.string().min(1).max(100),
+	content: z.string().max(500),
+	author: z.string(),
+	pinned: z.boolean(),
 })
 
-export const deleteNoteSchema = z.object({
+export const idNoteSchema = z.object({
 	id: z.string().min(1, "Note ID is required"),
 })
 
@@ -28,8 +30,9 @@ export const deleteNoteSchema = z.object({
  * This ensures our types always match our validation rules
  */
 export type CreateNoteInput = z.infer<typeof createNoteSchema>
+export type DeleteNoteInput = z.infer<typeof idNoteSchema>
+export type PinnedNoteInput = z.infer<typeof idNoteSchema>
 export type UpdateNoteInput = z.infer<typeof updateNoteSchema>
-export type DeleteNoteInput = z.infer<typeof deleteNoteSchema>
 
 /**
  * MongoDB document structure

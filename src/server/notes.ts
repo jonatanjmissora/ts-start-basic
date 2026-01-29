@@ -1,10 +1,11 @@
 import { getNotesCollection } from "@/lib/db/mongodb"
 import {
 	createNoteSchema,
-	deleteNoteSchema,
+	idNoteSchema,
 	documentToNote,
 	Note,
 	NoteDocument,
+	updateNoteSchema,
 } from "@/lib/types/notes"
 import { delay } from "@/lib/utils"
 import { createServerFn } from "@tanstack/react-start"
@@ -59,7 +60,7 @@ export const createMongoNote = createServerFn({ method: "POST" })
 	})
 
 export const deleteMongoNote = createServerFn({ method: "POST" })
-	.inputValidator(deleteNoteSchema)
+	.inputValidator(idNoteSchema)
 	.handler(async ({ data }) => {
 		try {
 			await delay()
@@ -75,6 +76,29 @@ export const deleteMongoNote = createServerFn({ method: "POST" })
 			}
 
 			return { note: data }
+		} catch (error: any) {
+			console.error("SERVER: Error creating note:", error)
+			throw new Error(`SERVER: ${error?.message}`)
+		}
+	})
+
+export const pinnedMongoNote = createServerFn({ method: "POST" })
+	.inputValidator(updateNoteSchema)
+	.handler(async ({ data: updatedNote }) => {
+		try {
+			await delay()
+			const collection = await getNotesCollection()
+			const res = await collection.updateOne(
+				{ _id: new ObjectId(updatedNote.id) },
+				{
+					$set: { pinned: updatedNote.pinned },
+				}
+			)
+			if (res.modifiedCount !== 1) {
+				throw new Error(`SERVER error`)
+			}
+
+			return { updatedNote }
 		} catch (error: any) {
 			console.error("SERVER: Error creating note:", error)
 			throw new Error(`SERVER: ${error?.message}`)

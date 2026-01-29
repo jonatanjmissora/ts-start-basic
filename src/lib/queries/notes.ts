@@ -1,4 +1,9 @@
-import { createMongoNote, deleteMongoNote, getMongoNotes } from "@/server/notes"
+import {
+	createMongoNote,
+	deleteMongoNote,
+	getMongoNotes,
+	pinnedMongoNote,
+} from "@/server/notes"
 import {
 	QueryClient,
 	queryOptions,
@@ -62,6 +67,23 @@ export const useDeleteMongoNote = (queryClient: QueryClient) => {
 			const newNotes = oldNotes.filter(
 				oldNote => oldNote.id !== variables.data.id
 			)
+			queryClient.setQueryData(["notes"], newNotes)
+		},
+	})
+}
+
+export const usePinnedMongoNote = (queryClient: QueryClient) => {
+	return useMutation({
+		mutationFn: pinnedMongoNote,
+		onSuccess: async ({ updatedNote }: { updatedNote: Note }) => {
+			if (!updatedNote.id) return
+			await queryClient.cancelQueries({ queryKey: ["notes"] })
+			const oldNotes = queryClient.getQueryData<Note[]>(["notes"])
+			if (!oldNotes) return
+			const newNotes = oldNotes.map(oldNote =>
+				oldNote.id === updatedNote.id ? updatedNote : oldNote
+			)
+			console.log("NOTA ACTUALIZADA", updatedNote)
 			queryClient.setQueryData(["notes"], newNotes)
 		},
 	})
