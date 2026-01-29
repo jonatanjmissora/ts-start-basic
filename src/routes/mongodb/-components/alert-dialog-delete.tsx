@@ -13,20 +13,21 @@ import {
 import { useDeleteMongoNote } from "@/lib/queries/notes"
 import { Note } from "@/lib/types/notes"
 import { useQueryClient } from "@tanstack/react-query"
-import { useNavigate } from "@tanstack/react-router"
 import { Loader, Trash2, Trash2Icon } from "lucide-react"
+import { useState } from "react"
 
 export function AlertDialogDelete({ note }: { note: Note }) {
-	const navigate = useNavigate()
+	const [open, setOpen] = useState(false)
 	const queryClient = useQueryClient()
-	const { mutate: deleteMongoNote, isPending } = useDeleteMongoNote(queryClient)
+	const { mutateAsync: deleteMongoNote, isPending } =
+		useDeleteMongoNote(queryClient)
 
-	const handleDelete = async () => {
+	const handleDelete = () => {
 		deleteMongoNote(
 			{ data: { id: note.id } },
 			{
 				onSuccess: () => {
-					navigate({ to: "/mongodb", replace: true })
+					setOpen(false)
 					// sonner mesage goes here
 				},
 				onError: error => {
@@ -38,15 +39,16 @@ export function AlertDialogDelete({ note }: { note: Note }) {
 	}
 
 	return (
-		<AlertDialog>
+		<AlertDialog open={open}>
 			<AlertDialogTrigger asChild>
-				<button className="cursor-pointer">
+				<button className="cursor-pointer" onClick={() => setOpen(true)}>
 					<Trash2 size={20} />
 				</button>
 			</AlertDialogTrigger>
 			<AlertDialogContent
 				size="sm"
-				className={"bg-blue-950 border border-blue-900"}
+				setOpen={setOpen}
+				className={"bg-blue-950 border border-blue-900 p-20"}
 			>
 				<AlertDialogHeader>
 					<AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
@@ -59,12 +61,16 @@ export function AlertDialogDelete({ note }: { note: Note }) {
 					<AlertDialogCancel
 						variant="outline"
 						className="bg-blue-900 text-white border border-blue-900"
+						onClick={() => setOpen(false)}
 					>
 						Cancelar
 					</AlertDialogCancel>
 					<AlertDialogAction variant="destructive" onClick={handleDelete}>
 						{isPending ? (
-							<Loader size={20} className="animate-spin" />
+							<div className="flex items-center gap-1">
+								Eliminar
+								<Loader size={20} className="animate-spin" />
+							</div>
 						) : (
 							"Eliminar"
 						)}

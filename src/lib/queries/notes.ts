@@ -51,6 +51,7 @@ export const useDeleteMongoNote = (queryClient: QueryClient) => {
 	return useMutation({
 		mutationFn: deleteMongoNote,
 		onSuccess: async (_data, variables) => {
+			if (!variables.data.id) return
 			await queryClient.cancelQueries({ queryKey: ["notes"] })
 			const oldNotes = queryClient.getQueryData<Note[]>(["notes"])
 			if (!oldNotes) return
@@ -62,7 +63,6 @@ export const useDeleteMongoNote = (queryClient: QueryClient) => {
 				oldNote => oldNote.id !== variables.data.id
 			)
 			queryClient.setQueryData(["notes"], newNotes)
-			await queryClient.invalidateQueries({ queryKey: ["notes"] })
 		},
 	})
 }

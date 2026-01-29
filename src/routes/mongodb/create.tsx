@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
-import { Plus } from "lucide-react"
+import { Loader, Plus } from "lucide-react"
 import { useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { useCreateMongoNote } from "@/lib/queries/notes"
@@ -15,7 +15,8 @@ function RouteComponent() {
 	const [error, setError] = useState("")
 	const queryClient = useQueryClient()
 
-	const { mutate: createMongoNote, isPending } = useCreateMongoNote(queryClient)
+	const { mutateAsync: createMongoNote, isPending } =
+		useCreateMongoNote(queryClient)
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -66,8 +67,16 @@ function RouteComponent() {
 					<button
 						type="submit"
 						className="bg-blue-500/70 p-2 rounded cursor-pointer"
+						disabled={isPending}
 					>
-						{isPending ? "Creando..." : "Crear"}
+						{isPending ? (
+							<div className="flex items-center gap-2 justify-center">
+								Creando...
+								<Loader size={20} className="animate-spin" />
+							</div>
+						) : (
+							"Crear"
+						)}
 					</button>
 					{error && <p className="text-red-600">{error}</p>}
 				</form>
