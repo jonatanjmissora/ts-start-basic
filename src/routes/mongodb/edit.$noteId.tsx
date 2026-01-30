@@ -38,8 +38,9 @@ function EditForm({ note }: { note: Note }) {
 			{
 				data: {
 					id: note.id,
-					title: note.title,
-					content: note.content,
+					author: note.author,
+					title: title,
+					content: content,
 					pinned: note.pinned,
 				},
 			},

@@ -16,6 +16,7 @@ export const PinnedButton = ({ note }: { note: Note }) => {
 			{
 				data: {
 					id: note.id,
+					author: note.author,
 					title: updatedNote.title,
 					content: updatedNote.content,
 					pinned: updatedNote.pinned,

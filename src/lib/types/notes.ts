@@ -15,6 +15,7 @@ export const createNoteSchema = z.object({
 
 export const updateNoteSchema = z.object({
 	id: z.string().min(1, "Note ID is required"),
+	author: z.string().min(1, "Note author is required"),
 	title: z.string().min(1).max(100),
 	content: z.string().max(500),
 	pinned: z.boolean(),
